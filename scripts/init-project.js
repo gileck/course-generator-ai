@@ -135,6 +135,10 @@ function ensureEnvFromParentOrEmpty() {
 async function main() {
     ensureEnvFromParentOrEmpty();
 
+    if (!process.env.MONGO_URI) {
+        throw new Error('MONGO_URI is not set. Please rerun the generator');
+    }
+
     const defaultName = getDefaultProjectName();
     const projectName = await prompt('Project Name', defaultName);
     const dbName = toDbName(projectName);
