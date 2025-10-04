@@ -15,7 +15,7 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 0: Database & Infrastructure Setup
+## Foundations: Database & AI
 
 ### Database Collections
 
@@ -51,38 +51,42 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 1: Generate Course Flow
+## Flow 1: Generate Course
 
 ### User Flow: Home → Course Suggestions → Course Generation → Course Dashboard
 
-### 1.1 API: Generate Course Suggestions
+### 1.1 API: Courses module (generation + fetching)
 
-- [ ] **Create Course Suggestions API Module** (`src/apis/courses/`)
+- [ ] **Create Courses API Module** (`src/apis/courses/`)
   
   - [ ] **Create `index.ts`**
-    - [ ] Export `API_GENERATE_COURSE_SUGGESTIONS` constant
-    - [ ] Export `API_SELECT_COURSE_SUGGESTION` constant
-    - [ ] Export `API_GET_COURSE` constant
-    - [ ] Export `API_GET_USER_COURSES` constant
+    - [ ] Export API name constants (domain-prefixed):
+      - [ ] `export const API_GENERATE_COURSE_SUGGESTIONS = 'courses/generateCourseSuggestions'`
+      - [ ] `export const API_SELECT_COURSE_SUGGESTION = 'courses/selectCourseSuggestion'`
+      - [ ] `export const API_GET_COURSE = 'courses/getCourse'`
+      - [ ] `export const API_GET_USER_COURSES = 'courses/getUserCourses'`
 
   - [ ] **Create `types.ts`**
-    - [ ] Define `CourseSuggestion` type: `title`, `overview_summary`, `overview_detail`, `difficulty`, `est_total_minutes`, `learning_outcomes[]`
+    - [ ] Import client-facing DB types from collections (avoid duplication):
+      - [ ] `import { CourseClient } from '@/server/database/collections/courses/types'`
+      - [ ] `import { NodeClient } from '@/server/database/collections/nodes/types'`
+    - [ ] Define `CourseSuggestion`: `title`, `overview_summary`, `overview_detail`, `difficulty`, `est_total_minutes`, `learning_outcomes[]`
     - [ ] Define `GenerateCourseSuggestionsRequest`: `user_input`, `language?`
     - [ ] Define `GenerateCourseSuggestionsResponse`: `suggestions: CourseSuggestion[]`
     - [ ] Define `SelectCourseSuggestionRequest`: `suggestion: CourseSuggestion`, `focus_notes?`
-    - [ ] Define `SelectCourseSuggestionResponse`: `course_id: string`, `course: Course`, `modules: Module[]`
-    - [ ] Define `Course` type matching DB schema
-    - [ ] Define `Module` type (top-level node): `id`, `title`, `synopsis`, `time_est_minutes`, `order_index`
+    - [ ] Define `SelectCourseSuggestionResponse`: `course_id: string`, `course: CourseClient`, `modules: NodeClient[]`
+    - [ ] Define `Module` alias (top-level node): `NodeClient` with `depth=1`, `parent_id=null`
     - [ ] Define `GetCourseRequest`: `course_id: string`
-    - [ ] Define `GetCourseResponse`: `course: Course`, `modules: Module[]`
+    - [ ] Define `GetCourseResponse`: `course: CourseClient`, `modules: NodeClient[]`
     - [ ] Define `GetUserCoursesResponse`: `courses: CourseWithProgress[]`
-    - [ ] Define `CourseWithProgress`: Course + `progress_percentage`, `completed_nodes`, `total_nodes`
+    - [ ] Define `CourseWithProgress`: `CourseClient` + `progress_percentage`, `completed_nodes`, `total_nodes`
 
   - [ ] **Create `server.ts`**
-    - [ ] Re-export API names from `index.ts`
-    - [ ] Import AI helper `generateCourseSuggestions`
-    - [ ] Import AI helper `generateCourseStructure`
-    - [ ] Import course collection helpers
+    - [ ] `export * from './index'`
+    - [ ] Import AI helpers: `generateCourseSuggestions`, `generateCourseStructure`
+    - [ ] Import DB collection helpers
+    - [ ] Export consolidated handlers map `coursesApiHandlers`:
+      - [ ] `export const coursesApiHandlers = { [API_X]: { process: handler }, ... }` (same pattern as `todosApiHandlers`)
 
   - [ ] **Create `handlers/generateCourseSuggestions.ts`**
     - [ ] Validate user input (not empty, reasonable length)
@@ -115,10 +119,10 @@ This document provides a detailed, actionable task list for implementing the Lea
     - [ ] Return array of courses with progress
 
   - [ ] **Wire handlers in `server.ts`**
-    - [ ] Export handler functions properly
+    - [ ] Add entries to `coursesApiHandlers`
 
   - [ ] **Create `client.ts`**
-    - [ ] Import API names from `index.ts` (NOT from server.ts)
+    - [ ] Import API names from `index.ts` only (NEVER from `server.ts`)
     - [ ] Import types from `types.ts`
     - [ ] Create `generateCourseSuggestions()` returning `CacheResult<GenerateCourseSuggestionsResponse>`
     - [ ] Create `selectCourseSuggestion()` returning `CacheResult<SelectCourseSuggestionResponse>`
@@ -127,14 +131,13 @@ This document provides a detailed, actionable task list for implementing the Lea
     - [ ] Use `apiClient` for all calls
 
   - [ ] **Register API in `src/apis/apis.ts`**
-    - [ ] Add course suggestion handlers to API registry
-    - [ ] Add select course handler to API registry
-    - [ ] Add get course handler to API registry
-    - [ ] Add get user courses handler to API registry
+    - [ ] Import `{ coursesApiHandlers }` from `./courses/server`
+    - [ ] Spread into `apiHandlers` (like Todos): `...typedCoursesApiHandlers`
+    - [ ] Ensure handler signature `(params, context)` matches `processApiCall`
 
-### 1.2 UI: Home Screen (Generate Page)
+### 1.2 UI: Home Screen (Generate Page) — Update existing route
 
-- [ ] **Create Home Route** (`src/client/routes/Home/`)
+- [ ] **Update Home Route** (`src/client/routes/Home/`)
   
   - [ ] **Create `index.ts`**
     - [ ] Export `Home` component as default
@@ -257,7 +260,7 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 2: View Course & Navigate to Nodes
+## Flow 2: Generate Node Content
 
 ### 2.1 API: Get Node Data
 
@@ -289,11 +292,7 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 3: Generate Node Content
-
-### User Flow: Course Dashboard → Node Page → View Content
-
-### 3.1 API: Generate Node Content (Tabs)
+### 2.2 API: Generate Node Content (Tabs)
 
 - [ ] **Extend Courses API Module** (`src/apis/courses/`)
 
@@ -323,7 +322,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] **Register in `src/apis/apis.ts`**
     - [ ] Add generateNodeContent handler to API registry
 
-### 3.2 UI: Node Page (Without Subtopics)
+### 2.3 UI: Node Page (Without Subtopics)
 
 - [ ] **Create Node Page Route** (`src/client/routes/NodePage/`)
   
@@ -375,7 +374,7 @@ This document provides a detailed, actionable task list for implementing the Lea
     - [ ] Sticky to bottom
     - [ ] Minimum 44px height
 
-### 3.3 API: Mark Node as Done
+### 2.4 API: Mark Node as Done
 
 - [ ] **Extend Courses API Module** (`src/apis/courses/`)
 
@@ -410,11 +409,11 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 4: Generate Subtopics Flow
+## Flow 3: Generate Subtopics
 
 ### User Flow: Node Page → Generate Subtopics → View Subtopics → Navigate to Child Node
 
-### 4.1 API: Generate Subtopics
+### 3.1 API: Generate Subtopics
 
 - [ ] **Extend Courses API Module** (`src/apis/courses/`)
 
@@ -448,7 +447,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] **Register in `src/apis/apis.ts`**
     - [ ] Add generateSubtopics handler to API registry
 
-### 4.2 UI: Node Page with Subtopics Section
+### 3.2 UI: Node Page with Subtopics Section
 
 - [ ] **Update Node Page Route** (`src/client/routes/NodePage/`)
 
@@ -494,9 +493,9 @@ This document provides a detailed, actionable task list for implementing the Lea
 
 ---
 
-## Phase 5: Polish & Compliance
+## Cross-cutting: Design, Accessibility, Performance, Compliance
 
-### 5.1 Design System & Theming
+### Design System & Theming (applies across all four pages)
 
 - [ ] **Create Design Tokens** (`src/client/styles/tokens.css` or TS config)
   - [ ] Define color palette from design-guidelines.md
@@ -526,7 +525,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] Button glow effect on hover
   - [ ] Respect "reduce motion" settings
 
-### 5.2 Navigation & Routing
+### Navigation & Routing
 
 - [ ] **Update Router** (`src/client/router/index.tsx`)
   - [ ] Add route: `/` → Home
@@ -542,7 +541,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] Utility to navigate up one level
   - [ ] Handle edge cases (orphaned nodes)
 
-### 5.3 Error Handling & Edge Cases
+### Error Handling & Edge Cases
 
 - [ ] **API Error Handling**
   - [ ] Wrap all API calls with try-catch
@@ -566,7 +565,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] Validate node/course IDs before queries
   - [ ] Check user permissions (if multi-user)
 
-### 5.4 Accessibility
+### Accessibility
 
 - [ ] **ARIA Labels**
   - [ ] Add ARIA labels to all buttons
@@ -586,7 +585,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] All buttons minimum 44x44px
   - [ ] All clickable areas meet size requirements
 
-### 5.5 Performance Optimization
+### Performance Optimization
 
 - [ ] **Code Splitting**
   - [ ] Lazy load route components
@@ -603,7 +602,7 @@ This document provides a detailed, actionable task list for implementing the Lea
   - [ ] Limit query results (pagination if needed)
   - [ ] Use projections to fetch only needed fields
 
-### 5.6 Guidelines Compliance Check
+### Guidelines Compliance Check
 
 - [ ] **Run Full Guidelines Checklist**
   
@@ -649,7 +648,7 @@ This document provides a detailed, actionable task list for implementing the Lea
     - [ ] Fix all ESLint errors
     - [ ] Test all user flows manually
 
-### 5.7 Testing & QA
+### Testing & QA
 
 - [ ] **Manual Testing**
   - [ ] Test full flow: Home → Generate → Select → View Course → Open Node → Generate Content → Generate Subtopics
