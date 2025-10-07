@@ -14,15 +14,22 @@ export interface AIModelDefinition {
 // Gemini models with pricing information
 export const GEMINI_MODELS: AIModelDefinition[] = [
   {
-    id: 'gemini-1.5-flash-8b',
-    name: 'Gemini 1.5 Flash-8B',
+    id: 'gemini-2.5-flash-lite',
+    name: 'Gemini 2.5 Flash Lite',
+    provider: 'gemini',
+    maxTokens: 8192,
+    capabilities: ['summarization', 'question-answering', 'content-generation']
+  },
+  {
+    id: 'gemini-2.5-flash',
+    name: 'Gemini 2.5 Flash',
     provider: 'gemini',
     maxTokens: 1048576,
     capabilities: ['summarization', 'question-answering', 'content-generation']
   },
   {
-    id: 'gemini-1.5-pro',
-    name: 'Gemini 1.5 Pro',
+    id: 'gemini-2.5-pro',
+    name: 'Gemini 2.5 Pro',
     provider: 'gemini',
     maxTokens: 32768,
     capabilities: ['summarization', 'question-answering', 'content-generation', 'reasoning']
@@ -49,7 +56,8 @@ export const OPENAI_MODELS: AIModelDefinition[] = [
 
 // Helper function to get all available models
 export function getAllModels(): AIModelDefinition[] {
-  return [...GEMINI_MODELS, ...OPENAI_MODELS];
+  // Prefer OpenAI first as default to reduce risk of missing Gemini API key/models
+  return [...OPENAI_MODELS, ...GEMINI_MODELS];
 }
 
 // Helper function to get models by provider

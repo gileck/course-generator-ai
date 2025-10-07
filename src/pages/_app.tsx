@@ -7,6 +7,7 @@ import AuthWrapper from "@/client/components/auth/AuthWrapper";
 import dynamic from 'next/dynamic';
 import { routes } from '@/client/routes';
 import { Layout } from '@/client/components/Layout';
+import '@/client/styles/tokens.css';
 import { useEffect } from 'react';
 import { useSettings } from '@/client/settings/SettingsContext';
 import { initializeApiClient } from '@/client/utils/apiClient';

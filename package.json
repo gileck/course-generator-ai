@@ -14,7 +14,6 @@
     "watch-checks": "node scripts/watch-checks.js"
   },
   "dependencies": {
-    "dotenv": "^16.4.5",
     "@aws-sdk/client-s3": "^3.777.0",
     "@aws-sdk/s3-request-presigner": "^3.777.0",
     "@google/generative-ai": "^0.24.0",
@@ -29,6 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cookie": "^1.0.2",
+    "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.544.0",
     "mongodb": "^6.16.0",
@@ -38,7 +38,9 @@
     "openai": "^4.90.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "9",
     "recharts": "^2.15.1",
+    "remark-gfm": "4",
     "tailwind-merge": "^3.3.1",
     "tiktoken": "^1.0.20"
   },

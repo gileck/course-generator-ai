@@ -1,14 +1,16 @@
 import { NavItem } from './layout/types';
-import { Home, MessageSquare, Settings, CheckSquare } from 'lucide-react';
+import { Home, Settings, Library, Clock } from 'lucide-react';
 
 export const navItems: NavItem[] = [
   { path: '/', label: 'Home', icon: <Home size={18} /> },
+  { path: '/courses', label: 'Courses', icon: <Library size={18} /> },
+  { path: '/recent', label: 'Recent', icon: <Clock size={18} /> },
   { path: '/settings', label: 'Settings', icon: <Settings size={18} /> },
 ];
 
 export const menuItems: NavItem[] = [
   { path: '/', label: 'Home', icon: <Home size={18} /> },
-  { path: '/ai-chat', label: 'AI Chat', icon: <MessageSquare size={18} /> },
-  { path: '/todos', label: 'Todos', icon: <CheckSquare size={18} /> },
+  { path: '/courses', label: 'Courses', icon: <Library size={18} /> },
+  { path: '/recent', label: 'Recent', icon: <Clock size={18} /> },
   { path: '/settings', label: 'Settings', icon: <Settings size={18} /> },
 ];

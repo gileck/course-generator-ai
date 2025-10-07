@@ -3,6 +3,7 @@ import * as chat from "./chat/server";
 import * as clearCache from "./settings/clearCache/server";
 import * as auth from "./auth/server";
 import { todosApiHandlers } from "./todos/server";
+import { coursesApiHandlers } from "./courses/server";
 
 // Convert todos API handlers to the generic signature
 const typedTodosApiHandlers = Object.entries(todosApiHandlers).reduce(
@@ -24,6 +25,15 @@ export const apiHandlers: ApiHandlers = {
   [auth.logout]: { process: auth.logoutUser as (params: unknown, context: ApiHandlerContext) => Promise<unknown> },
   [auth.updateProfile]: { process: auth.updateUserProfile as (params: unknown, context: ApiHandlerContext) => Promise<unknown> },
   ...typedTodosApiHandlers,
+  ...Object.entries(coursesApiHandlers).reduce(
+    (acc, [key, handler]) => {
+      acc[key] = {
+        process: handler.process as (params: unknown, context: ApiHandlerContext) => Promise<unknown>,
+      };
+      return acc;
+    },
+    {} as ApiHandlers
+  ),
 };
 
 
