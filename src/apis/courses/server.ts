@@ -34,7 +34,7 @@ export const coursesApiHandlers = {
     [API_GENERATE_SUBTOPICS]: { process: generateSubtopics },
     [API_MARK_NODE_DONE]: { process: markNodeDone },
     [API_MARK_NODE_UNDONE]: { process: markNodeUndone },
-  [API_DELETE_COURSE]: { process: deleteCourse },
+    [API_DELETE_COURSE]: { process: deleteCourse },
 };
 
 

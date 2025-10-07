@@ -22,7 +22,7 @@ export const RecentlyViewed: React.FC = () => {
     };
 
     return (
-        <div className="page-padding max-w-3xl mx-auto">
+        <div className="page-padding max-w-4xl mx-auto">
             <div className="flex items-center justify-between">
                 <h1 className="text-primary" style={{ fontSize: 'var(--h1-size)', lineHeight: 'var(--h1-line)', fontWeight: 'var(--h1-weight)' }}>Recently Viewed</h1>
                 {items.length > 0 && (
@@ -37,17 +37,31 @@ export const RecentlyViewed: React.FC = () => {
             ) : (
                 <div className="mt-4 grid gap-3">
                     {items.map((it) => (
-                        <Card key={`${it.kind}:${it.id}`} className="p-4 bg-background/60 border cursor-pointer hover:border-accent-from" onClick={() => navigate(it.path)}>
-                            <div className="flex items-start justify-between gap-3">
-                                <div className="flex-1">
-                                    <div className="flex items-center gap-2">
+                        <Card
+                            key={`${it.kind}:${it.id}`}
+                            className="p-4 bg-background/60 border cursor-pointer hover:border-accent-from"
+                            onClick={() => navigate(it.path)}
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div className="flex-1 min-w-0">
+                                    <div className="flex flex-wrap items-center gap-2 text-tertiary" style={{ fontSize: 'var(--caption-size)', lineHeight: 'var(--caption-line)' }}>
                                         <Badge variant="outline">{kindLabel[it.kind]}</Badge>
-                                        <span className="text-tertiary" style={{ fontSize: 'var(--caption-size)' }}>{new Date(it.viewedAt).toLocaleString()}</span>
+                                        <span>•</span>
+                                        <span>{new Date(it.viewedAt).toLocaleString()}</span>
                                     </div>
-                                    <h3 className="text-primary mt-1" style={{ fontSize: 'var(--h3-size)', lineHeight: 'var(--h3-line)', fontWeight: 'var(--h3-weight)' }}>{it.title}</h3>
-                                    <p className="text-secondary text-sm mt-1">{it.path}</p>
+                                    <h3
+                                        className="text-primary mt-1"
+                                        style={{ fontSize: 'var(--h3-size)', lineHeight: 'var(--h3-line)', fontWeight: 'var(--h3-weight)', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}
+                                    >
+                                        {it.title}
+                                    </h3>
+                                    {it.courseTitle && (
+                                        <div className="text-tertiary mt-2" style={{ fontSize: 'var(--caption-size)', lineHeight: 'var(--caption-line)' }}>
+                                            {it.courseTitle}
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="text-tertiary">→</div>
+                                <div className="text-tertiary shrink-0">→</div>
                             </div>
                         </Card>
                     ))}
@@ -56,5 +70,7 @@ export const RecentlyViewed: React.FC = () => {
         </div>
     );
 };
+
+
 
 

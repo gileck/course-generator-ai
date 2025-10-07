@@ -284,9 +284,10 @@ export const NodePage: React.FC = () => {
                         kind: props.data.node.depth === 0 ? 'module' : 'node',
                         title: props.data.node.title,
                         path: `/courses/${courseId}/nodes/${nodeId}`,
+                        courseTitle: props.data.breadcrumbs[0]?.title,
                     });
                 }
-            }, [props.data?.node, nodeId, courseId]);
+            }, [props.data?.node, nodeId, courseId, props.data?.breadcrumbs]);
             return <NodePageBase {...props} />;
         },
         { showGlobalLoading: true }

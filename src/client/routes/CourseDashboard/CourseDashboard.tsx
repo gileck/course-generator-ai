@@ -12,6 +12,18 @@ const CourseDashboardBase: React.FC<{ data: { course: { title: string; overviewS
     const { routeParams, navigate } = useRouter();
     const courseId = routeParams['courseId'];
 
+    // Record recent course view
+    useEffect(() => {
+        if (courseId && data?.course?.title) {
+            addRecentView({
+                id: courseId,
+                kind: 'course',
+                title: data.course.title,
+                path: `/courses/${courseId}`,
+            });
+        }
+    }, [courseId, data?.course?.title]);
+
     const percentage = 0; // MVP: compute later when child progress exists
     const continueHref = data.modules[0]?._id ? `/courses/${courseId}/nodes/${data.modules[0]._id}` : undefined;
 
@@ -68,20 +80,7 @@ export const CourseDashboard: React.FC = () => {
     const { routeParams } = useRouter();
     const courseId = routeParams['courseId'];
     if (!courseId) return <div>Missing course</div>;
-    const Wrapped = withDataFetcher(() => getCourse({ course_id: courseId }), (props) => {
-        // Record course view when data arrives
-        useEffect(() => {
-            if (props.data?.course && courseId) {
-                addRecentView({
-                    id: courseId,
-                    kind: 'course',
-                    title: props.data.course.title,
-                    path: `/courses/${courseId}`,
-                });
-            }
-        }, [props.data?.course, courseId]);
-        return <CourseDashboardBase {...props} />;
-    });
+    const Wrapped = withDataFetcher(() => getCourse({ course_id: courseId }), CourseDashboardBase);
     return <Wrapped />;
 };
 

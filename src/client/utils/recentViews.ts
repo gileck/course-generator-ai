@@ -6,6 +6,7 @@ export interface RecentViewItem {
     title: string;
     path: string;
     viewedAt: string; // ISO string
+    courseTitle?: string; // For node/module, show parent course name
 }
 
 const STORAGE_KEY = 'recent_views_v1';
@@ -56,5 +57,7 @@ export const clearRecentViews = (): void => {
     if (typeof window === 'undefined') return;
     localStorage.removeItem(STORAGE_KEY);
 };
+
+
 
 
