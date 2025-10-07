@@ -17,12 +17,12 @@ This plan strictly follows `Product-Definitions/MVP-features.md` to deliver the 
 ## Data (MVP-minimal)
 
 - [ ] **Course collection** (`src/server/database/collections/courses.{ts,types.ts}`)
-  - [ ] Fields: `id`, `title`, `overview_summary`, `overview_detail`, `difficulty?`, `est_total_minutes?`, `created_at`, `updated_at`, `created_by_user_id?`
+  - [ ] Fields: `id`, `title`, `overview_summary`, `overview_detail`, `difficulty?`, `created_at`, `updated_at`, `created_by_user_id?`
   - [ ] Indexes: `created_by_user_id`, `updated_at`
   - [ ] Export server/client types: `CourseServer`, `CourseClient`
 
 - [ ] **Node collection** (`src/server/database/collections/nodes.{ts,types.ts}`)
-  - [ ] Fields: `id`, `course_id`, `parent_id (nullable)`, `title`, `synopsis`, `order_index`, `depth`, `tab_overview_md?`, `tab_deep_dive_md?`, `tab_terminology_md?`, `time_est_minutes?`, `is_done`, `done_at?`, `last_viewed_at?`, `created_at`, `updated_at`
+  - [ ] Fields: `id`, `course_id`, `parent_id (nullable)`, `title`, `synopsis`, `order_index`, `depth`, `tab_overview_md?`, `tab_deep_dive_md?`, `tab_terminology_md?`, `is_done`, `done_at?`, `last_viewed_at?`, `created_at`, `updated_at`
   - [ ] Indexes: `course_id`, `parent_id`, `(course_id,parent_id,order_index)`
   - [ ] Export server/client types: `NodeServer`, `NodeClient`
 
@@ -83,7 +83,7 @@ AI Helpers (`src/server/ai/`)
   - [ ] Error: one-line explanation + Retry
 
 - [ ] Course Suggestions (`src/client/routes/CourseSuggestions/`)
-  - [ ] List 1–3 options: title + short summary (chips: difficulty, est time if present)
+  - [ ] List 1–3 options: title + short summary (chip: difficulty)
   - [ ] Expand for learning outcomes
   - [ ] Select → call `courses/selectCourseSuggestion` → navigate to Course page
   - [ ] Optional: “Regenerate suggestions”
@@ -97,9 +97,9 @@ AI Helpers (`src/server/ai/`)
 ### 3) Course Page (Program Dashboard)
 
 - [ ] Route: `CourseDashboard` (`/courses/:courseId`)
-  - [ ] Header: title, progress bar (% done), chips (difficulty, duration)
+  - [ ] Header: title, progress bar (% done), chips (difficulty)
   - [ ] Overview: short + long
-  - [ ] Modules list: title, synopsis, estimated time, progress pill (X/Y done)
+  - [ ] Modules list: title, synopsis, progress pill (X/Y done)
   - [ ] Primary CTA: Continue (opens last viewed or first module)
   - [ ] Loading/Empty/Error per MVP rules
 
@@ -111,7 +111,7 @@ AI Helpers (`src/server/ai/`)
   - [ ] Lazy generate tab content on first open via AI prompt #4
   - [ ] Subtopics section
     - [ ] Empty: “Generate Subtopics” button
-    - [ ] List: child cards (title, synopsis, checkbox if done, time if present)
+    - [ ] List: child cards (title, synopsis)
   - [ ] Sticky footer: “✅ Done” (marks node done, navigates to parent)
   - [ ] Loading with shimmer; concise error messages
 

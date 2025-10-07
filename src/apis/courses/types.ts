@@ -8,12 +8,15 @@ export interface CourseSuggestion {
     overview_summary: string;
     overview_detail: string;
     difficulty?: string;
-    est_total_minutes?: number;
     learning_outcomes: string[];
 }
 
 export interface GenerateCourseSuggestionsRequest {
     user_input: string;
+    // Optional: additional free-text refinement from the user to further steer suggestions
+    refine_input?: string;
+    // Optional: previous suggestions shown to the user, used to better align regeneration
+    previous_suggestions?: CourseSuggestion[];
     ai_model?: string;
 }
 export interface GenerateCourseSuggestionsResponse {

@@ -4,11 +4,16 @@ import { generateCourseSuggestions as aiGenerate } from '@/server/ai/helpers/cou
 export const generateCourseSuggestions = async (
     params: GenerateCourseSuggestionsRequest
 ): Promise<GenerateCourseSuggestionsResponse> => {
-    const { user_input } = params;
+    const { user_input, refine_input, previous_suggestions } = params;
     if (!user_input || user_input.trim().length === 0) {
         return { suggestions: [] };
     }
-    const raw = await aiGenerate(user_input, params.ai_model || 'gpt-4o-mini');
+    const raw = await aiGenerate(
+        user_input,
+        params.ai_model || 'gpt-4o-mini',
+        refine_input,
+        previous_suggestions
+    );
     // Normalize various plausible shapes into { suggestions: CourseSuggestion[] }
     let suggestions: CourseSuggestion[] = [];
     try {

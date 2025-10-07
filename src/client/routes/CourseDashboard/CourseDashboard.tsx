@@ -7,8 +7,8 @@ import { Badge } from '@/client/components/ui/badge';
 import { Button } from '@/client/components/ui/button';
 import { addRecentView } from '@/client/utils/recentViews';
 
-interface ModuleCard { _id: string; title: string; synopsis: string; timeEstMinutes?: number }
-const CourseDashboardBase: React.FC<{ data: { course: { title: string; overviewSummary?: string; difficulty?: string; estTotalMinutes?: number }; modules: ModuleCard[] }; isLoading: boolean; error: string | null; refresh: () => void }> = ({ data }) => {
+interface ModuleCard { _id: string; title: string; synopsis: string }
+const CourseDashboardBase: React.FC<{ data: { course: { title: string; overviewSummary?: string; difficulty?: string }; modules: ModuleCard[] }; isLoading: boolean; error: string | null; refresh: () => void }> = ({ data }) => {
     const { routeParams, navigate } = useRouter();
     const courseId = routeParams['courseId'];
 
@@ -44,7 +44,7 @@ const CourseDashboardBase: React.FC<{ data: { course: { title: string; overviewS
                 </div>
                 <div className="flex items-center gap-2 mt-2">
                     {data.course.difficulty && <Badge variant="secondary">{data.course.difficulty}</Badge>}
-                    {typeof data.course.estTotalMinutes === 'number' && <Badge variant="outline">~{Math.round((data.course.estTotalMinutes || 0) / 60) || data.course.estTotalMinutes}{(data.course.estTotalMinutes || 0) >= 60 ? 'h' : 'm'}</Badge>}
+                    {/* duration removed */}
                     <Badge variant="outline">{data.modules.length} modules</Badge>
                 </div>
                 <div className="mt-3">
@@ -62,7 +62,7 @@ const CourseDashboardBase: React.FC<{ data: { course: { title: string; overviewS
                                 <div className="flex-1">
                                     <h3 className="text-primary" style={{ fontSize: 'var(--h3-size)', lineHeight: 'var(--h3-line)', fontWeight: 'var(--h3-weight)' }}>{idx + 1}. {m.title}</h3>
                                     <p className="text-secondary text-sm mt-1" style={{ lineHeight: 'var(--body-line)' }}>{m.synopsis}</p>
-                                    <div className="mt-2"><Badge variant="outline">{typeof m.timeEstMinutes === 'number' ? `${m.timeEstMinutes} min` : '—'}</Badge></div>
+                                    {/* duration removed */}
                                 </div>
                                 <div>
                                     <Button variant="secondary" onClick={() => navigate(`/courses/${courseId}/nodes/${m._id}`)}>Open</Button>

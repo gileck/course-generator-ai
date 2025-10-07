@@ -15,7 +15,7 @@ export const selectCourseSuggestion = async (
     console.log('[selectCourseSuggestion] Raw AI response:', JSON.stringify(raw, null, 2));
     // Expected raw: { course: {...}, modules: [...] }
     // Normalize modules: some models may nest or rename the array
-    type ModuleLike = { title: string; short_title?: string; synopsis: string; time_est_minutes?: number };
+    type ModuleLike = { title: string; short_title?: string; synopsis: string };
     const isModuleArray = (arr: unknown): arr is ModuleLike[] => Array.isArray(arr) && arr.every(it => it && typeof (it as ModuleLike).title === 'string' && typeof (it as ModuleLike).synopsis === 'string');
     const extractModules = (input: unknown): ModuleLike[] => {
         if (!input || typeof input !== 'object') return [];
@@ -55,7 +55,6 @@ export const selectCourseSuggestion = async (
         overviewSummary: suggestion.overview_summary,
         overviewDetail: suggestion.overview_detail,
         difficulty: suggestion.difficulty,
-        estTotalMinutes: suggestion.est_total_minutes,
         createdByUserId: context.userId ? new ObjectId(context.userId) : undefined,
         createdAt: now,
         updatedAt: now,
@@ -90,7 +89,6 @@ export const selectCourseSuggestion = async (
         synopsis: m.synopsis,
         orderIndex: idx,
         depth: 1,
-        timeEstMinutes: m.time_est_minutes,
         isDone: false,
         createdAt: now,
         updatedAt: now,
@@ -107,7 +105,6 @@ export const selectCourseSuggestion = async (
             overviewSummary: courseDoc.overviewSummary,
             overviewDetail: courseDoc.overviewDetail,
             difficulty: courseDoc.difficulty,
-            estTotalMinutes: courseDoc.estTotalMinutes,
             createdByUserId: courseDoc.createdByUserId?.toHexString(),
             createdAt: courseDoc.createdAt.toISOString(),
             updatedAt: courseDoc.updatedAt.toISOString(),
@@ -121,7 +118,6 @@ export const selectCourseSuggestion = async (
             synopsis: m.synopsis,
             orderIndex: m.orderIndex,
             depth: m.depth,
-            timeEstMinutes: m.timeEstMinutes,
             isDone: m.isDone,
             createdAt: m.createdAt.toISOString(),
             updatedAt: m.updatedAt.toISOString(),

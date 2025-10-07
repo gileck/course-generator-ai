@@ -10,7 +10,6 @@ export interface CourseServer {
     overviewSummary: string;
     overviewDetail: string;
     difficulty?: string; // optional for MVP
-    estTotalMinutes?: number; // optional for MVP
     createdByUserId?: ObjectId; // optional for single-user MVP
     createdAt: Date;
     updatedAt: Date;
@@ -41,7 +40,6 @@ export interface CourseClient {
     overviewSummary: string;
     overviewDetail: string;
     difficulty?: string;
-    estTotalMinutes?: number;
     createdByUserId?: string;
     createdAt: string;
     updatedAt: string;

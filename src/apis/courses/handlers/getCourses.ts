@@ -18,7 +18,6 @@ export const getCourses = async (
             overviewSummary: c.overviewSummary,
             overviewDetail: c.overviewDetail,
             difficulty: c.difficulty,
-            estTotalMinutes: c.estTotalMinutes,
             createdByUserId: c.createdByUserId?.toHexString(),
             createdAt: c.createdAt.toISOString(),
             updatedAt: c.updatedAt.toISOString(),

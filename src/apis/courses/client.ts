@@ -66,15 +66,6 @@ export const getNode = async (
     return apiClient.call(API_GET_NODE, params, options);
 };
 
-// Prefetch node into client cache so navigation will be instant
-export const prefetchNode = async (nodeId: string): Promise<void> => {
-    try {
-        await apiClient.call<GetNodeResponse>(API_GET_NODE, { node_id: nodeId }, { disableCache: false, bypassCache: false });
-    } catch {
-        // swallow prefetch errors silently
-    }
-};
-
 export const setLastViewed = async (
     params: SetLastViewedRequest
 ): Promise<CacheResult<SetLastViewedResponse>> => {

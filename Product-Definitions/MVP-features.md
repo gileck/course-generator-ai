@@ -59,8 +59,8 @@ Here’s the **leanest possible MVP** that still delivers the core magic: *type 
 
 # 🧱 Data (MVP-minimal)
 
-* **Course**: `id`, `title`, `overview_summary`, `overview_detail`, (optional) `difficulty`, `est_total_minutes`, timestamps.
-* **Node**: `id`, `course_id`, `parent_id` (NULL for modules), `title`, `synopsis`, `order_index`, `depth`, tab fields (`tab_overview_md`, `tab_deep_dive_md`, `tab_terminology_md`), `time_est_minutes` (optional), **progress** (`is_done`, `done_at`, `last_viewed_at`), timestamps.
+* **Course**: `id`, `title`, `overview_summary`, `overview_detail`, (optional) `difficulty`, timestamps.
+* **Node**: `id`, `course_id`, `parent_id` (NULL for modules), `title`, `synopsis`, `order_index`, `depth`, tab fields (`tab_overview_md`, `tab_deep_dive_md`, `tab_terminology_md`), **progress** (`is_done`, `done_at`, `last_viewed_at`), timestamps.
 
 > Modules = Nodes with `parent_id = NULL`, `depth = 1`.
 

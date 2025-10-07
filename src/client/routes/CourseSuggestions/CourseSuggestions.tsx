@@ -5,14 +5,16 @@ import { useSettings } from '@/client/settings/SettingsContext';
 import { Card } from '@/client/components/ui/card';
 import { Button } from '@/client/components/ui/button';
 import { Badge } from '@/client/components/ui/badge';
+import { Input } from '@/client/components/ui/input';
 
 export const CourseSuggestions: React.FC = () => {
     const { queryParams, navigate } = useRouter();
     const { settings } = useSettings();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | undefined>();
-    type Suggestion = { title: string; overview_summary: string; overview_detail: string; learning_outcomes: string[]; difficulty?: string; est_total_minutes?: number };
+    type Suggestion = { title: string; overview_summary: string; overview_detail: string; learning_outcomes: string[]; difficulty?: string };
     const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
+    const [refineText, setRefineText] = useState<string>('');
     console.log('suggestions', suggestions);
 
     useEffect(() => {
@@ -33,6 +35,26 @@ export const CourseSuggestions: React.FC = () => {
             }
         })();
     }, [queryParams, settings.aiModel]);
+    const onRegenerate = async () => {
+        const topic = queryParams['q'];
+        if (!topic) return;
+        try {
+            setLoading(true);
+            setError(undefined);
+            const res = await generateCourseSuggestions({
+                user_input: topic,
+                refine_input: refineText || undefined,
+                previous_suggestions: suggestions,
+                ai_model: settings.aiModel,
+            }, { disableCache: true, bypassCache: true });
+            setSuggestions(res.data.suggestions || []);
+        } catch (e) {
+            setError(e instanceof Error ? e.message : 'Failed to regenerate suggestions');
+        } finally {
+            setLoading(false);
+        }
+    };
+
 
     const onSelect = async (s: Suggestion) => {
         try {
@@ -60,9 +82,7 @@ export const CourseSuggestions: React.FC = () => {
                                 <p className="text-sm text-muted-foreground mb-3">{s.overview_summary}</p>
                                 <div className="flex items-center gap-2 mb-3">
                                     {s.difficulty && <Badge variant="secondary">{s.difficulty}</Badge>}
-                                    {typeof s.est_total_minutes === 'number' && (
-                                        <Badge variant="outline">~{Math.round(s.est_total_minutes / 60) || s.est_total_minutes} {s.est_total_minutes && s.est_total_minutes >= 60 ? 'hrs' : 'min'}</Badge>
-                                    )}
+                                    {/* duration removed */}
                                 </div>
                             </div>
                             <div>
@@ -72,6 +92,22 @@ export const CourseSuggestions: React.FC = () => {
                     </Card>
                 ))}
             </div>
+            <Card className="p-4 mt-4 bg-background/60 border">
+                <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="refine">Add more detail or refine your request</label>
+                    <Input
+                        id="refine"
+                        placeholder="E.g., prefer hands-on projects, target intermediate level, focus on React and TypeScript, 6 weeks max..."
+                        value={refineText}
+                        onChange={(e) => setRefineText(e.target.value)}
+                    />
+                    <div className="flex gap-2">
+                        <Button variant="secondary" onClick={onRegenerate} disabled={loading}>
+                            Regenerate Suggestions
+                        </Button>
+                    </div>
+                </div>
+            </Card>
         </div>
     );
 };

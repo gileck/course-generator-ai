@@ -22,14 +22,13 @@ export const generateSubtopics = async (
     });
 
     const now = new Date();
-    const docs = ((raw.subtopics as Array<{ title: string; synopsis: string; time_est_minutes?: number }>) || []).map((s, idx) => ({
+    const docs = ((raw.subtopics as Array<{ title: string; synopsis: string }>) || []).map((s, idx) => ({
         courseId: parent.courseId,
         parentId: parent._id,
         title: s.title,
         synopsis: s.synopsis,
         orderIndex: idx,
         depth: parent.depth + 1,
-        timeEstMinutes: s.time_est_minutes,
         isDone: false,
         createdAt: now,
         updatedAt: now,
@@ -45,7 +44,6 @@ export const generateSubtopics = async (
             synopsis: n.synopsis,
             orderIndex: n.orderIndex,
             depth: n.depth,
-            timeEstMinutes: n.timeEstMinutes,
             isDone: n.isDone,
             createdAt: n.createdAt.toISOString(),
             updatedAt: n.updatedAt.toISOString(),

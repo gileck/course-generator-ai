@@ -21,7 +21,6 @@ export const markNodeUndone = async (
             tabOverviewMd: updated.tabOverviewMd,
             tabDeepDiveMd: updated.tabDeepDiveMd,
             tabTerminologyMd: updated.tabTerminologyMd,
-            timeEstMinutes: updated.timeEstMinutes,
             isDone: updated.isDone,
             doneAt: updated.doneAt ? updated.doneAt.toISOString() : null,
             lastViewedAt: updated.lastViewedAt ? updated.lastViewedAt.toISOString() : null,

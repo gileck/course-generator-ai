@@ -12,7 +12,6 @@ export interface NodeServer {
     tabOverviewMd?: string;
     tabDeepDiveMd?: string;
     tabTerminologyMd?: string;
-    timeEstMinutes?: number;
     isDone: boolean;
     doneAt?: Date | null;
     lastViewedAt?: Date | null;
@@ -41,7 +40,6 @@ export interface NodeClient {
     tabOverviewMd?: string;
     tabDeepDiveMd?: string;
     tabTerminologyMd?: string;
-    timeEstMinutes?: number;
     isDone: boolean;
     doneAt?: string | null;
     lastViewedAt?: string | null;

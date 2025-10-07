@@ -34,7 +34,7 @@ User input:
 
 Requirements:
 - Offer 1–3 **diverse** course options.
-- Each option must include: title, overview_summary, overview_detail, difficulty, est_total_minutes, learning_outcomes (3–6).
+- Each option must include: title, overview_summary, overview_detail, difficulty, learning_outcomes (3–6).
 - Keep titles ≤ 70 chars; summaries ≤ 180 chars; outcomes each ≤ 120 chars.
 - Choose the most appropriate difficulty.
 - Estimate duration in minutes for a focused mini-degree.
@@ -51,13 +51,12 @@ JSON Schema (Draft-07):
       "maxItems": 3,
       "items": {
         "type": "object",
-        "required": ["title","overview_summary","overview_detail","difficulty","est_total_minutes","learning_outcomes"],
+"required": ["title","overview_summary","overview_detail","difficulty","learning_outcomes"],
         "properties": {
           "title": { "type": "string", "maxLength": 70 },
           "overview_summary": { "type": "string", "maxLength": 180 },
           "overview_detail": { "type": "string" },
           "difficulty": { "type": "string", "enum": ["beginner","intermediate","advanced"] },
-          "est_total_minutes": { "type": "integer", "minimum": 30, "maximum": 1440 },
           "learning_outcomes": {
             "type": "array",
             "minItems": 3,
@@ -81,7 +80,7 @@ JSON Schema (Draft-07):
       "overview_summary": "How metabolism drives energy, hormones, and longevity.",
       "overview_detail": "Build a working model of human metabolism, from macronutrient fate to regulation and health-span. Balance core biochemistry with practical interpretation.",
       "difficulty": "intermediate",
-      "est_total_minutes": 240,
+      
       "learning_outcomes": [
         "Explain major metabolic pathways and their control",
         "Relate metabolism to glycemic control, lipids, and body composition",
@@ -94,7 +93,7 @@ JSON Schema (Draft-07):
       "overview_summary": "Beginner-friendly tour from molecules to energy.",
       "overview_detail": "Understand how food becomes ATP, the role of enzymes, and how cells allocate energy at rest and during exercise.",
       "difficulty": "beginner",
-      "est_total_minutes": 180,
+      
       "learning_outcomes": [
         "Describe ATP and why cells need it",
         "Outline glycolysis, Krebs, and the ETC in plain language",
@@ -106,7 +105,7 @@ JSON Schema (Draft-07):
       "overview_summary": "Apply evidence-based levers to improve metabolic fitness.",
       "overview_detail": "Translate metabolism into actionable routines for nutrition, activity, sleep, and stress with safety guardrails.",
       "difficulty": "intermediate",
-      "est_total_minutes": 210,
+      
       "learning_outcomes": [
         "Prioritize behaviors that enhance insulin sensitivity",
         "Plan meals around protein and fiber without rigid tracking",
@@ -127,7 +126,7 @@ JSON Schema (Draft-07):
 * `{{selected_overview_summary}}`
 * `{{selected_overview_detail}}`
 * `{{selected_difficulty}}`
-* `{{selected_est_total_minutes}}`
+ 
 * Optional focus tags: `{{focus_notes}}` (string; e.g., “prioritize practical applications”)
 * Optional `{{language}}` (default `"en"`)
 
@@ -141,12 +140,12 @@ Selected course:
 - Summary: {{selected_overview_summary}}
 - Detail: {{selected_overview_detail}}
 - Difficulty: {{selected_difficulty}}
-- Estimated total minutes: {{selected_est_total_minutes}}
+ 
 - Notes: {{focus_notes}}
 
 Requirements:
 - Produce 4–8 top-level modules (no subtopics yet).
-- Each module: title (≤ 70 chars), synopsis (≤ 140 chars), time_est_minutes (10–90).
+- Each module: title (≤ 70 chars), synopsis (≤ 140 chars).
 - Modules should be ordered from foundational → applied.
 - Output **JSON only** per the schema.
 
@@ -157,13 +156,13 @@ JSON Schema:
   "properties": {
     "course": {
       "type": "object",
-      "required": ["title","overview_summary","overview_detail","difficulty","est_total_minutes"],
+      "required": ["title","overview_summary","overview_detail","difficulty"],
       "properties": {
         "title": { "type": "string" },
         "overview_summary": { "type": "string" },
         "overview_detail": { "type": "string" },
         "difficulty": { "type": "string", "enum": ["beginner","intermediate","advanced"] },
-        "est_total_minutes": { "type": "integer" }
+         
       }
     },
     "modules": {
@@ -172,11 +171,11 @@ JSON Schema:
       "maxItems": 8,
       "items": {
         "type": "object",
-        "required": ["title","synopsis","time_est_minutes"],
+        "required": ["title","synopsis"],
         "properties": {
           "title": { "type": "string", "maxLength": 70 },
           "synopsis": { "type": "string", "maxLength": 140 },
-          "time_est_minutes": { "type": "integer", "minimum": 10, "maximum": 90 }
+          
         }
       }
     }
@@ -196,12 +195,12 @@ JSON Schema:
     "est_total_minutes": 240
   },
   "modules": [
-    { "title": "Metabolic Foundations", "synopsis": "Core terms, compartments, and energy logic.", "time_est_minutes": 30 },
-    { "title": "Macronutrient Fate", "synopsis": "How carbs, fats, proteins are processed and stored.", "time_est_minutes": 40 },
-    { "title": "Energy Systems", "synopsis": "Glycolysis, Krebs cycle, and electron transport overview.", "time_est_minutes": 45 },
-    { "title": "Hormonal Regulation", "synopsis": "Insulin, glucagon, thyroid, cortisol in metabolism.", "time_est_minutes": 40 },
-    { "title": "Biomarkers & Testing", "synopsis": "Glucose, lipids, HbA1c, fasting vs. postprandial.", "time_est_minutes": 35 },
-    { "title": "Lifestyle Levers", "synopsis": "Nutrition, activity, sleep, stress—safely applied.", "time_est_minutes": 50 }
+    { "title": "Metabolic Foundations", "synopsis": "Core terms, compartments, and energy logic." },
+    { "title": "Macronutrient Fate", "synopsis": "How carbs, fats, proteins are processed and stored." },
+    { "title": "Energy Systems", "synopsis": "Glycolysis, Krebs cycle, and electron transport overview." },
+    { "title": "Hormonal Regulation", "synopsis": "Insulin, glucagon, thyroid, cortisol in metabolism." },
+    { "title": "Biomarkers & Testing", "synopsis": "Glucose, lipids, HbA1c, fasting vs. postprandial." },
+    { "title": "Lifestyle Levers", "synopsis": "Nutrition, activity, sleep, stress—safely applied." }
   ]
 }
 ```
@@ -234,7 +233,7 @@ Context:
 
 Requirements:
 - Return {{count}} subtopics unless context reasonably limits fewer (min 3).
-- Each subtopic: title (≤ 70 chars), synopsis (≤ 140 chars), time_est_minutes (5–40).
+- Each subtopic: title (≤ 70 chars), synopsis (≤ 140 chars).
 - Order from prerequisite → advanced.
 - Output **JSON only** per schema.
 
@@ -248,11 +247,11 @@ JSON Schema:
       "minItems": 3,
       "items": {
         "type": "object",
-        "required": ["title","synopsis","time_est_minutes"],
+        "required": ["title","synopsis"],
         "properties": {
           "title": { "type": "string", "maxLength": 70 },
           "synopsis": { "type": "string", "maxLength": 140 },
-          "time_est_minutes": { "type": "integer", "minimum": 5, "maximum": 40 }
+          
         }
       }
     }
@@ -265,11 +264,11 @@ JSON Schema:
 ```json
 {
   "subtopics": [
-    { "title": "Glycolysis", "synopsis": "Cytosolic glucose breakdown to pyruvate and ATP.", "time_est_minutes": 12 },
-    { "title": "Pyruvate to Acetyl-CoA", "synopsis": "Link reaction feeding the Krebs cycle.", "time_est_minutes": 8 },
-    { "title": "Krebs (TCA) Cycle", "synopsis": "Mitochondrial hub harvesting electrons for the ETC.", "time_est_minutes": 15 },
-    { "title": "Electron Transport Chain", "synopsis": "Proton gradient, complexes I–IV, ATP synthase.", "time_est_minutes": 14 },
-    { "title": "ATP Yield & Efficiency", "synopsis": "Stoichiometry, leaks, and practical limits.", "time_est_minutes": 10 }
+    { "title": "Glycolysis", "synopsis": "Cytosolic glucose breakdown to pyruvate and ATP." },
+    { "title": "Pyruvate to Acetyl-CoA", "synopsis": "Link reaction feeding the Krebs cycle." },
+    { "title": "Krebs (TCA) Cycle", "synopsis": "Mitochondrial hub harvesting electrons for the ETC." },
+    { "title": "Electron Transport Chain", "synopsis": "Proton gradient, complexes I–IV, ATP synthase." },
+    { "title": "ATP Yield & Efficiency", "synopsis": "Stoichiometry, leaks, and practical limits." }
   ]
 }
 ```
@@ -302,7 +301,7 @@ Tab requirements:
 - OVERVIEW (markdown): 2–4 short paragraphs + 3–6 bullet learning outcomes. Plain language; max ~350 words.
 - DEEP_DIVE (markdown): Focused technical detail, mechanisms, caveats, and common misconceptions. Add 1 short illustrative example. Max ~500 words.
 - TERMINOLOGY (markdown): 8–15 concise term: definition pairs in bullet list form (e.g., **Term** — definition).
-- Also suggest a time estimate and difficulty for this node.
+- Also suggest a difficulty for this node (no time estimate).
 
 Style:
 - Avoid fluff; be precise and neutral.
@@ -313,12 +312,11 @@ Style:
 JSON Schema:
 {
   "type": "object",
-  "required": ["overview_md","deep_dive_md","terminology_md","suggested_time_minutes","suggested_difficulty"],
+"required": ["overview_md","deep_dive_md","terminology_md","suggested_difficulty"],
   "properties": {
     "overview_md": { "type": "string" },
     "deep_dive_md": { "type": "string" },
     "terminology_md": { "type": "string" },
-    "suggested_time_minutes": { "type": "integer", "minimum": 5, "maximum": 90 },
     "suggested_difficulty": { "type": "string", "enum": ["beginner","intermediate","advanced"] }
   }
 }
@@ -331,7 +329,6 @@ JSON Schema:
   "overview_md": "## What is Cellular Respiration?\nCellular respiration is the set of processes cells use to extract energy from fuel molecules and convert it into ATP, the usable energy currency.\n\nAt a high level, glucose is split in glycolysis, acetyl-CoA feeds the Krebs cycle, and electron carriers (NADH, FADH2) drive the electron transport chain to power ATP synthase.\n\n**Learning outcomes**\n- Trace carbon flow from glucose to CO₂\n- Explain how NADH/FADH₂ enable ATP production\n- Distinguish aerobic vs. anaerobic routes\n- Identify where regulation constrains output",
   "deep_dive_md": "## Mechanism\nGlycolysis yields 2 ATP and 2 NADH per glucose. Pyruvate dehydrogenase produces acetyl-CoA, regulated by energy charge and substrate availability. The TCA cycle harvests high-energy electrons; ETC complexes establish a proton-motive force across the inner mitochondrial membrane. ATP synthase couples proton flow to ATP formation.\n\n## Efficiency & Control\nTheoretical ATP yield per glucose is ~30–32 but varies with shuttle systems and proton leak. Rate control is distributed (PFK-1, pyruvate dehydrogenase, citrate synthase), influenced by ADP/ATP, NADH/NAD⁺, Ca²⁺, and oxygen. Mitochondrial uncoupling reduces ATP yield while increasing heat.\n\n## Example\nDuring moderate cycling, rising ADP stimulates oxidative phosphorylation; increased citrate can feedback to slow glycolysis, shifting substrate use toward fat oxidation as intensity stabilizes.\n\n## Pitfalls\nConfusing substrate-level phosphorylation with oxidative phosphorylation; assuming a fixed ATP yield across tissues.",
   "terminology_md": "- **ATP** — Primary cellular energy currency.\n- **NADH/FADH₂** — Electron carriers delivering reducing power to the ETC.\n- **ETC** — Protein complexes that create a proton gradient to power ATP synthase.\n- **PFK-1** — Key glycolytic regulatory enzyme.\n- **Pyruvate dehydrogenase** — Converts pyruvate to acetyl-CoA; tightly regulated.\n- **Proton-motive force** — Electrochemical gradient driving ATP synthesis.\n- **Uncoupling** — Proton leak that lowers ATP yield and increases heat.\n- **Oxidative phosphorylation** — ATP generation using oxygen as terminal electron acceptor.\n- **Anaerobic glycolysis** — ATP production without oxygen, yielding lactate.\n- **Citrate** — TCA intermediate that inhibits PFK-1 at high levels.",
-  "suggested_time_minutes": 20,
   "suggested_difficulty": "intermediate"
 }
 ```

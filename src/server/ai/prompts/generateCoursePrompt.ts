@@ -3,7 +3,6 @@ export const buildGenerateCoursePrompt = (selected: {
   overview_summary: string;
   overview_detail: string;
   difficulty?: string;
-  est_total_minutes?: number;
 }, focusNotes: string | undefined): string => {
   const notes = focusNotes ? `\n- Notes: ${focusNotes}` : '';
   return `Create a course scaffold (top-level modules only) for the selected direction.
@@ -13,11 +12,11 @@ Selected course:
 - Summary: ${selected.overview_summary}
 - Detail: ${selected.overview_detail}
 - Difficulty: ${selected.difficulty || 'Beginner'}
-- Estimated total minutes: ${selected.est_total_minutes || 180}${notes}
+${notes}
 
 Requirements:
 - Produce 4–8 top-level modules (no subtopics yet).
-- Each module: title (≤ 70 chars), short_title (concise ≤ 32 chars), synopsis (≤ 140 chars), time_est_minutes (10–90).
+- Each module: title (≤ 70 chars), short_title (concise ≤ 32 chars), synopsis (≤ 140 chars).
 - Modules should be ordered from foundational → applied.
 - CRITICAL: You MUST return a JSON object with a "modules" array. Do not return an empty array.
 - Output ONLY valid JSON in this exact format:
@@ -26,14 +25,12 @@ Requirements:
     {
       "title": "Module 1 Title",
       "short_title": "Module 1",
-      "synopsis": "Brief description of module 1",
-      "time_est_minutes": 30
+      "synopsis": "Brief description of module 1"
     },
     {
       "title": "Module 2 Title",
       "short_title": "Module 2",
-      "synopsis": "Brief description of module 2",
-      "time_est_minutes": 45
+      "synopsis": "Brief description of module 2"
     }
   ]
 }
